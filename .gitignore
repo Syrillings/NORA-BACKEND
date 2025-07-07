@@ -1,0 +1,55 @@
+# Binaries for programs and plugins
+*.exe
+*.dll
+*.so
+*.dylib
+*.o
+*.a
+
+# Test binary, generated with `go test -c`
+*.test
+
+# Output of the go coverage tool, specifically when using -o
+*.out
+
+# Dependency directories (remove the "vendor/" line below if you are not using modules with a vendor folder)
+# vendor/
+
+# Go workspace file
+go.work
+
+# Go build cache
+.go/
+
+# Environment variables
+# This is crucial for files like .env or similar that contain sensitive data
+# like your database credentials.
+.env
+.env.*
+!.env.example # Keep example files if you have them
+
+# IDE and editor files
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+.DS_Store # macOS specific
+Thumbs.db # Windows specific
+
+# Logs and temporary files
+*.log
+tmp/
+*.tmp
+*~
+*.bak
+*.swp
+
+# Compiled output directories
+bin/
+build/
+dist/
+
+# Any other specific directories you might generate
+# For Gin, you might have a 'public' or 'static' folder that contains assets
+# that should be committed, so generally no specific Gin ignores are needed
+# unless you're generating dynamic files there.

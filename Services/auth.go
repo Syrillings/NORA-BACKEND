@@ -12,7 +12,7 @@ import (
 
 var (
 	db        *gorm.DB //This line creates the database instance
-	jwtSecret = []byte(os.Getenv("JWT_SECRET"))
+	jwtSecret string
 )
 
 // InitDB initializes the database connection for the Services package
@@ -23,6 +23,8 @@ func InitDB(database *gorm.DB) {
 }
 
 func generateToken(userID uint, email string) (string, error) {
+
+	jwtSecret = os.Getenv("JWT_SECRET")
 	// Set token claims
 	claims := jwt.MapClaims{
 		"user_id": userID,
@@ -35,7 +37,11 @@ func generateToken(userID uint, email string) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
 	// Generate encoded token
-	return token.SignedString(jwtSecret)
+	tokenString, err := token.SignedString([]byte(jwtSecret))
+	if err != nil {
+		return "", err
+	}
+	return tokenString, nil
 }
 
 // Signing up Functionanlity

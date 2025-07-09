@@ -23,7 +23,7 @@ type Sites struct{
 	CheckInterval int `gorm:"default:10" `
 	LastChecked *time.Time
 	LastStatus SiteStatus  `gorm:"default:unknown" `
-	isActive bool `gorm:"default:true" `
+	IsActive bool `gorm:"column:is_active;default:true"`
 }
 
 type SiteCheck struct{

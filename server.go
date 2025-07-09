@@ -19,8 +19,6 @@ var db *gorm.DB
 
 func main() {
 
-  
- //  authMiddleware := middleware.AuthMiddleware(jwtSecret)
 
     //This block confirms if the .env file exists
     if err := godotenv.Load(); err != nil{
@@ -48,6 +46,11 @@ func main() {
 
    //Initializing Services with the db. It allows the signup and login functions to use the database
    Services.InitDB(db)
+
+   
+  monitorService := Services.NewMonitorService(db)  
+  go monitorService.StartMonitoring()
+  
 
   server := gin.Default()
  setupRoutes(server)

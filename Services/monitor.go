@@ -17,20 +17,19 @@ type MonitorService struct{
 }
 
 //Creates a new monitor instance for a new user.....I think
+//oh good, it worked
 func NewMonitorService(db *gorm.DB) *MonitorService{
    return &MonitorService{ db : db }
 }
 
 func (ms *MonitorService) StartMonitoring(){
-	//This link ticks every ten minutes, when the sites are checked
 	ticker := time.NewTicker(1*time.Minute)
 	//Loop runs after every tick
 	for range ticker.C{
 		ms.CheckAllWebsites()
 	}
 }
-
-//This block Checks the sites to confirm 
+ 
 func (ms* MonitorService)CheckAllWebsites(){
       var Sites []Models.Sites
 	  if err := ms.db.Where("is_active = ?", true).Find(&Sites).Error; err != nil{
@@ -60,7 +59,7 @@ func (ms *MonitorService) CheckSite(site Models.Sites) {
     ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
     defer cancel()
 
-    // Create a new request
+    // Creates a new request
     req, err := http.NewRequestWithContext(ctx, "GET", urlToCheck, nil)
     if err != nil {
         ms.RecordCheck(site, check, Models.StatusDown, 0, fmt.Sprintf("Request creation failed: %v", err))
@@ -72,10 +71,10 @@ func (ms *MonitorService) CheckSite(site Models.Sites) {
     req.Header.Set("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8")
     req.Header.Set("Accept-Language", "en-US,en;q=0.5")
 
-    // Configure the HTTP client
+    
     client := &http.Client{
         Timeout: 30 * time.Second,
-        // Follow up to 10 redirects
+        // 10 redirects or thereabout
         CheckRedirect: func(req *http.Request, via []*http.Request) error {
             if len(via) >= 10 {
                 return fmt.Errorf("stopped after 10 redirects")
@@ -96,7 +95,6 @@ func (ms *MonitorService) CheckSite(site Models.Sites) {
     }
     defer resp.Body.Close()
 
-    // Read the response body to ensure the full request completes
     _, err = io.Copy(io.Discard, resp.Body)
     if err != nil {
         ms.RecordCheck(site, check, Models.StatusDown, 0, fmt.Sprintf("Failed to read response: %v", err))

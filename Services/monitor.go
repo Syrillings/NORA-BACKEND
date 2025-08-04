@@ -12,7 +12,6 @@ import (
 	"github.com/syrillings/nora-backend/Models"
 )
 
-//This struct contains a reference to the db
 type MonitorService struct{
 	db *gorm.DB
 }
@@ -53,7 +52,6 @@ func (ms *MonitorService) CheckSite(site Models.Sites) {
 
     start := time.Now()
 
-    // Ensure URL has a scheme
     urlToCheck := site.URL
     if !strings.HasPrefix(urlToCheck, "http://") && !strings.HasPrefix(urlToCheck, "https://") {
         urlToCheck = "https://" + urlToCheck
@@ -84,7 +82,7 @@ func (ms *MonitorService) CheckSite(site Models.Sites) {
             }
             return nil
         },
-        // Skip SSL verification (use only for development)
+
         Transport: &http.Transport{
             TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
         },
@@ -125,7 +123,7 @@ func (ms *MonitorService)RecordCheck(Sites Models.Sites, check Models.SiteCheck,
 	//Saves the check to my db....wetin I dey actually write?
 	ms.db.Create(&check)
 
-	//Update site status
+	//Updates site status
 	ms.db.Model(&Sites).Updates(map[string]interface{}{
         "last_checked": now,
         "last_status":  status,
